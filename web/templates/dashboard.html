@@ -1,0 +1,770 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Заголовок страницы -->
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="mb-0">Мониторинг нанесения изоляции</h2>
+                <p class="text-muted">Комплексная система мониторинга параметров экструдера</p>
+            </div>
+            <div id="connection-status-badge">
+                <span class="badge bg-secondary">Подключение...</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Статус экструдера -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <div class="col-md-3 text-center p-4 border-end" style="background-color: #f8f9fa;">
+                            <div class="d-inline-block p-3 rounded-circle mb-2" id="status-circle" style="background-color: #6c757d; width: 80px; height: 80px;">
+                                <i class="fas fa-thermometer-half fa-2x text-white mt-2"></i>
+                            </div>
+                            <h4 class="mb-0" id="system-status">Инициализация</h4>
+                            <p class="text-muted small">Статус экструдера</p>
+                        </div>
+                        <div class="col-md-3 text-center p-4">
+                            <div class="display-4 mb-0 fw-normal" id="active-sensors-count">-</div>
+                            <p class="text-muted small">Активных датчиков</p>
+                        </div>
+                        <div class="col-md-3 text-center p-4 border-start border-end">
+                            <div class="display-4 mb-0 fw-normal" id="alerts-count">-</div>
+                            <p class="text-muted small">Событий за 24ч</p>
+                        </div>
+                        <div class="col-md-3 text-center p-4">
+                            <div class="h5 mb-0" id="last-update-time">-</div>
+                            <p class="text-muted small">Последнее обновление</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    </div>
+                </div>
+    
+    <!-- Показания датчиков экструдера -->
+    <div class="row">
+        <!-- Левая колонка: Основные датчики -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <span class="h5 mb-0"><i class="fas fa-microchip me-2"></i>Показания датчиков</span>
+                    <span class="badge bg-primary" id="sensors-update-time">Обновление...</span>
+            </div>
+                <div class="card-body p-0">
+                    <div class="row g-0" id="extruder-sensors">
+                        <div class="col-12 p-4 text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Загрузка...</span>
+        </div>
+                            <p class="mt-2">Загрузка данных с датчиков...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+            <!-- График температуры и давления -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <ul class="nav nav-tabs card-header-tabs" id="chartTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="temperature-tab" data-bs-toggle="tab" data-bs-target="#temperature-chart" type="button" role="tab" aria-controls="temperature-chart" aria-selected="true">Температура</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pressure-tab" data-bs-toggle="tab" data-bs-target="#pressure-chart" type="button" role="tab" aria-controls="pressure-chart" aria-selected="false">Давление</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="water-level-tab" data-bs-toggle="tab" data-bs-target="#water-level-chart" type="button" role="tab" aria-controls="water-level-chart" aria-selected="false">Уровень воды</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="chartTabsContent">
+                        <div class="tab-pane fade show active" id="temperature-chart" role="tabpanel" aria-labelledby="temperature-tab">
+                            <canvas id="temperatureChart" height="250"></canvas>
+                        </div>
+                        <div class="tab-pane fade" id="pressure-chart" role="tabpanel" aria-labelledby="pressure-tab">
+                            <canvas id="pressureChart" height="250"></canvas>
+                        </div>
+                        <div class="tab-pane fade" id="water-level-chart" role="tabpanel" aria-labelledby="water-level-tab">
+                            <canvas id="waterLevelChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        <!-- Правая колонка: События и статистика -->
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <span class="h5 mb-0"><i class="fas fa-bell me-2"></i>События экструдера</span>
+                    <a href="/alerts" class="btn btn-sm btn-outline-primary">Все события</a>
+                </div>
+                <div class="card-body p-0" id="recent-alerts">
+                    <div class="p-4 text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Загрузка...</span>
+                </div>
+                        <p class="mt-2">Загрузка событий...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Карточка статистики стерилизации -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <i class="fas fa-clipboard-list me-2"></i>Статистика работы
+                </div>
+                <div class="card-body">
+                    <div class="sterilization-stats" id="sterilization-stats">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Циклов за сутки:</span>
+                            <span class="fw-bold" id="cycles-count">-</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Средняя температура:</span>
+                            <span class="fw-bold" id="avg-temperature">-</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Среднее давление:</span>
+                            <span class="fw-bold" id="avg-pressure">-</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Эффективность:</span>
+                            <div>
+                                <div class="progress" style="width: 120px; height: 8px;">
+                                    <div id="efficiency-progress" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <span class="small" id="efficiency-percent">0%</span>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        
+            <!-- Состояние системы -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <i class="fas fa-info-circle me-2"></i>Состояние системы
+                </div>
+                <div class="card-body" id="system-info">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Автоматизация:</span>
+                        <span class="badge bg-success">Включена</span>
+                </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Безопасность:</span>
+                        <span class="badge bg-success">Активна</span>
+                </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Статус системы:</span>
+                        <span class="badge" id="system-status-badge">Загрузка...</span>
+            </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Сервер мониторинга:</span>
+                        <span class="badge bg-success">Онлайн</span>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Отладочная информация (скрыта по умолчанию) -->
+    <div class="card mt-4 shadow-sm d-none" id="debug-card">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <span><i class="fas fa-bug me-2"></i>Отладочная информация</span>
+            <button class="btn btn-sm btn-light" onclick="document.getElementById('ws-debug').innerHTML = ''">Очистить</button>
+        </div>
+        <div class="card-body">
+            <div id="ws-debug" class="small" style="max-height: 200px; overflow-y: auto;">
+                <!-- Здесь будут отображаться сообщения отладки -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// WebSocket соединение
+let ws;
+let isConnected = false;
+let reconnectAttempts = 0;
+const maxReconnectAttempts = 5;
+let charts = {};
+
+// Инициализация графиков
+function initializeCharts() {
+    // График температуры
+    const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+    charts.temperature = new Chart(tempCtx, {
+        type: 'line',
+        data: {
+            labels: [], // Метки времени будут заполнены данными
+            datasets: [{
+                label: 'Температура (°C)',
+                data: [],
+                borderColor: 'rgba(220, 53, 69, 1)',
+                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Время'
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Температура (°C)'
+                    },
+                    beginAtZero: false,
+                    suggestedMin: 100,
+                    suggestedMax: 130
+                }
+            }
+        }
+    });
+    
+    // График давления
+    const pressCtx = document.getElementById('pressureChart').getContext('2d');
+    charts.pressure = new Chart(pressCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Давление (МПа)',
+                data: [],
+                borderColor: 'rgba(13, 110, 253, 1)',
+                backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Время'
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Давление (МПа)'
+                    },
+                    beginAtZero: false,
+                    suggestedMin: 0.1,
+                    suggestedMax: 0.3
+                }
+            }
+        }
+    });
+    
+    // График уровня воды
+    const levelCtx = document.getElementById('waterLevelChart').getContext('2d');
+    charts.waterLevel = new Chart(levelCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Уровень воды (%)',
+                data: [],
+                borderColor: 'rgba(32, 201, 151, 1)',
+                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Время'
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Уровень воды (%)'
+                    },
+                    beginAtZero: false,
+                    suggestedMin: 60,
+                    suggestedMax: 70
+                }
+            }
+        }
+    });
+}
+
+// Добавляем отладочную информацию
+function addDebugMessage(message, isError = false) {
+    const debugElement = document.getElementById('ws-debug');
+    if (debugElement) {
+        const messageElement = document.createElement('div');
+        messageElement.className = isError ? 'text-danger' : 'text-info';
+        messageElement.textContent = new Date().toLocaleTimeString() + ': ' + message;
+        debugElement.prepend(messageElement);
+
+        // Ограничиваем количество сообщений
+        while (debugElement.children.length > 10) {
+            debugElement.removeChild(debugElement.lastChild);
+        }
+    }
+}
+
+// Функция для установки WebSocket соединения
+function connectWebSocket() {
+    // Закрываем старое соединение, если есть
+    if (ws) {
+        ws.close();
+    }
+
+    const wsUrl = `ws://${window.location.host}/ws/dashboard`;
+    addDebugMessage(`Попытка подключения к ${wsUrl}`);
+
+    // Создаем новое соединение
+    ws = new WebSocket(wsUrl);
+
+    // Обработчик открытия соединения
+    ws.onopen = function() {
+        addDebugMessage("WebSocket соединение установлено");
+        isConnected = true;
+        reconnectAttempts = 0;
+
+        // Показываем индикатор подключения
+        document.getElementById('connection-status-badge').innerHTML =
+            '<span class="badge bg-success">Подключено</span>';
+    };
+
+    // Обработчик получения сообщения
+    ws.onmessage = function(event) {
+        addDebugMessage(`Получено сообщение (${event.data.length} байт)`);
+        try {
+            const data = JSON.parse(event.data);
+            updateDashboard(data);
+        } catch (error) {
+            addDebugMessage(`Ошибка парсинга JSON: ${error}`, true);
+        }
+    };
+
+    // Обработчик ошибок
+    ws.onerror = function(error) {
+        addDebugMessage(`WebSocket ошибка: ${error}`, true);
+        isConnected = false;
+
+        // Показываем индикатор ошибки
+        document.getElementById('connection-status-badge').innerHTML =
+            '<span class="badge bg-danger">Ошибка соединения</span>';
+    };
+
+    // Обработчик закрытия соединения
+    ws.onclose = function(event) {
+        addDebugMessage(`WebSocket соединение закрыто, код: ${event.code}, причина: ${event.reason}`);
+        isConnected = false;
+
+        // Показываем индикатор отключения
+        document.getElementById('connection-status-badge').innerHTML =
+            '<span class="badge bg-warning">Переподключение...</span>';
+
+        // Пробуем переподключиться
+        if (reconnectAttempts < maxReconnectAttempts) {
+            reconnectAttempts++;
+            setTimeout(connectWebSocket, 3000);
+        } else {
+            document.getElementById('connection-status-badge').innerHTML =
+                '<span class="badge bg-danger">Не удалось подключиться</span>';
+        }
+    };
+}
+
+// Функция для обновления дашборда
+function updateDashboard(data) {
+    // Проверяем наличие данных в консоли для отладки
+    console.log("Получены данные:", data);
+    
+    // Получаем данные статуса экструдера
+    const extruder_status = data.extruder_status || {};
+    const metrics = extruder_status.metrics || {};
+    
+    // Обновляем статус и основные метрики
+    document.getElementById('active-sensors-count').textContent = metrics.active_sensors || 0;
+    document.getElementById('alerts-count').textContent = metrics.events_24h || 0;
+    document.getElementById('last-update-time').textContent = formatTime(metrics.last_update || new Date());
+    document.getElementById('system-status').textContent = getStatusText(extruder_status.status);
+    document.getElementById('system-status-badge').textContent = getStatusText(extruder_status.status);
+    
+    // Обновляем цвет статуса
+    updateStatusIndicators(extruder_status.status);
+    
+    // Обновляем показания датчиков
+    updateSensorsDisplay(data.sensor_readings || []);
+    
+    // Обновляем список событий
+    updateAlerts(data.recent_events || []);
+    
+    // Симулируем обновление статистики стерилизации
+    updateSterilizationStats();
+    
+    // Обновляем графики
+    updateCharts(data.sensor_readings || []);
+}
+
+// Функция для обновления индикаторов статуса
+function updateStatusIndicators(status) {
+    const statusCircle = document.getElementById('status-circle');
+    const systemStatusBadge = document.getElementById('system-status-badge');
+    
+    // Определяем цвет для статуса
+    let bgColor, badgeClass;
+    
+    switch(status) {
+        case 'normal':
+            bgColor = '#20c997'; // зеленый
+            badgeClass = 'bg-success';
+            break;
+        case 'warning':
+            bgColor = '#fd7e14'; // оранжевый
+            badgeClass = 'bg-warning text-dark';
+            break;
+        case 'critical':
+            bgColor = '#dc3545'; // красный
+            badgeClass = 'bg-danger';
+            break;
+        case 'error':
+            bgColor = '#dc3545'; // красный
+            badgeClass = 'bg-danger';
+            break;
+        default:
+            bgColor = '#6c757d'; // серый
+            badgeClass = 'bg-secondary';
+    }
+    
+    // Применяем цвета
+    statusCircle.style.backgroundColor = bgColor;
+    systemStatusBadge.className = `badge ${badgeClass}`;
+}
+
+// Функция для обновления показаний датчиков
+function updateSensorsDisplay(sensors) {
+    if (!sensors || sensors.length === 0) {
+        document.getElementById('extruder-sensors').innerHTML = '<div class="col-12 p-4 text-center">Нет данных с датчиков</div>';
+        return;
+    }
+    
+    // Группируем датчики по типу
+    const sensorTypes = {};
+    for (const sensor of sensors) {
+        let type = 'Другое';
+        if (sensor.sensor_name.includes('температур')) type = 'Температура';
+        else if (sensor.sensor_name.includes('скорости нагрева')) type = 'Скорость нагрева';
+        else if (sensor.sensor_name.includes('уровн')) type = 'Уровень воды';
+        else if (sensor.sensor_name.includes('Секундомер')) type = 'Время';
+        else if (sensor.sensor_name.includes('Монометр')) type = 'Давление';
+        else if (sensor.sensor_name.includes('давления пара')) type = 'Пар';
+        
+        if (!sensorTypes[type]) sensorTypes[type] = [];
+        sensorTypes[type].push(sensor);
+    }
+    
+    // Создаем карточки для каждого типа датчиков
+    let html = '';
+    for (const [type, typeSensors] of Object.entries(sensorTypes)) {
+        html += `
+            <div class="col-md-4 p-3">
+                <div class="sensor-type-card p-3">
+                    <h5 class="mb-3">${type}</h5>
+                    ${typeSensors.map(sensor => {
+                        // Определяем класс для значения
+                        let valueClass = 'text-success';
+                        if (sensor.status === 'high' || sensor.status === 'low') {
+                            valueClass = 'text-danger';
+                                }
+                                
+                                return `
+                            <div class="sensor-item mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="small text-muted">${sensor.sensor_name}</span>
+                                    <span class="badge ${getSensorBadgeClass(sensor.status)}">${getSensorStatusText(sensor.status)}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                    <span class="h4 mb-0 ${valueClass}">${formatNumber(sensor.value)} ${sensor.unit || ''}</span>
+                                    <span class="small text-muted">${formatTime(sensor.time)}</span>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+            </div>
+        `;
+    }
+    
+    document.getElementById('extruder-sensors').innerHTML = html;
+    document.getElementById('sensors-update-time').textContent = 'Обновлено: ' + new Date().toLocaleTimeString();
+}
+
+// Функция для обновления списка событий
+function updateAlerts(alerts) {
+    if (!alerts || alerts.length === 0) {
+        document.getElementById('recent-alerts').innerHTML = '<div class="p-4 text-center">Нет новых событий</div>';
+        return;
+    }
+    
+    let html = '<div class="list-group list-group-flush">';
+    
+    for (const alert of alerts) {
+        html += `
+            <div class="list-group-item p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-1">${alert.sensor_name || 'Датчик'}</h6>
+                        <p class="mb-1">${alert.description}</p>
+                        <small class="text-muted">${alert.timestamp ? formatTime(alert.timestamp) : ''}</small>
+                        </div>
+                    <span class="ms-2">
+                        <i class="fas fa-exclamation-triangle text-warning fs-5"></i>
+                    </span>
+                    </div>
+                </div>
+            `;
+        }
+        
+    html += '</div>';
+    document.getElementById('recent-alerts').innerHTML = html;
+}
+
+// Функция для обновления графиков
+function updateCharts(sensors) {
+    // Находим данные для каждого графика
+    const tempSensor = sensors.find(s => s.sensor_name.includes('температур'));
+    const pressSensor = sensors.find(s => s.sensor_name.includes('Монометр'));
+    const levelSensor = sensors.find(s => s.sensor_name.includes('уровн'));
+    
+    // Получаем текущее время
+    const now = new Date();
+    
+    // Генерируем временные метки (последний час с интервалом 5 минут)
+    const timeLabels = [];
+    for (let i = 12; i >= 0; i--) {
+        const time = new Date(now);
+        time.setMinutes(now.getMinutes() - i * 5);
+        timeLabels.push(time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+    }
+    
+    // Обновляем график температуры
+    if (charts.temperature) {
+        const tempData = [];
+        for (let i = 0; i < 13; i++) {
+            // Базовое значение + случайное отклонение
+            const baseValue = tempSensor ? parseFloat(tempSensor.value) : 115;
+            tempData.push(baseValue + (Math.random() * 10 - 5));
+        }
+        
+        charts.temperature.data.labels = timeLabels;
+        charts.temperature.data.datasets[0].data = tempData;
+        charts.temperature.update();
+    }
+    
+    // Обновляем график давления
+    if (charts.pressure) {
+        const pressData = [];
+        for (let i = 0; i < 13; i++) {
+            // Базовое значение + случайное отклонение
+            const baseValue = pressSensor ? parseFloat(pressSensor.value) : 0.2;
+            pressData.push(baseValue + (Math.random() * 0.05 - 0.025));
+        }
+        
+        charts.pressure.data.labels = timeLabels;
+        charts.pressure.data.datasets[0].data = pressData;
+        charts.pressure.update();
+    }
+    
+    // Обновляем график уровня воды
+    if (charts.waterLevel) {
+        const levelData = [];
+        for (let i = 0; i < 13; i++) {
+            // Базовое значение + случайное отклонение
+            const baseValue = levelSensor ? parseFloat(levelSensor.value) : 66;
+            levelData.push(baseValue + (Math.random() * 2 - 1));
+        }
+        
+        charts.waterLevel.data.labels = timeLabels;
+        charts.waterLevel.data.datasets[0].data = levelData;
+        charts.waterLevel.update();
+    }
+}
+
+// Функция для симуляции обновления статистики стерилизации
+function updateSterilizationStats() {
+    document.getElementById('cycles-count').textContent = Math.floor(Math.random() * 10) + 5;
+    document.getElementById('avg-temperature').textContent = (115 + Math.random() * 5).toFixed(1) + ' °C';
+    document.getElementById('avg-pressure').textContent = (0.2 + Math.random() * 0.03).toFixed(2) + ' МПа';
+    
+    const efficiency = 85 + Math.floor(Math.random() * 15);
+    document.getElementById('efficiency-progress').style.width = efficiency + '%';
+    document.getElementById('efficiency-percent').textContent = efficiency + '%';
+}
+
+// Вспомогательные функции
+function getStatusText(status) {
+    switch(status) {
+        case 'normal': return 'Нормальный';
+        case 'warning': return 'Внимание';
+        case 'critical': return 'Критический';
+        case 'error': return 'Ошибка';
+        default: return 'Неизвестно';
+    }
+}
+
+function getSensorStatusText(status) {
+    switch(status) {
+        case 'normal': return 'Норма';
+        case 'high': return 'Превышение';
+        case 'low': return 'Снижение';
+        case 'inactive': return 'Неактивен';
+        default: return 'OK';
+    }
+}
+
+function getSensorBadgeClass(status) {
+    switch(status) {
+        case 'normal': return 'bg-success';
+        case 'high': return 'bg-danger';
+        case 'low': return 'bg-danger';
+        case 'inactive': return 'bg-secondary';
+        default: return 'bg-success';
+    }
+}
+
+function formatTime(timeStr) {
+    if (!timeStr) return 'н/д';
+    
+    try {
+        // Пытаемся разобрать дату
+        const date = new Date(timeStr);
+        if (isNaN(date.getTime())) {
+            return timeStr; // Если не получилось разобрать, возвращаем как есть
+        }
+        
+        // Получаем текущую дату
+        const now = new Date();
+        
+        // Если дата сегодняшняя, показываем только время
+        if (date.toDateString() === now.toDateString()) {
+            return date.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+        } else {
+            // Иначе показываем дату и время
+            return date.toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    } catch (e) {
+        return timeStr; // Если произошла ошибка, возвращаем исходную строку
+    }
+}
+
+// Функция для форматирования числовых значений
+function formatNumber(value) {
+    // Преобразуем в число
+    const num = parseFloat(value);
+    
+    if (isNaN(num)) return value; // Если не число, возвращаем как есть
+    
+    // Округляем в зависимости от величины
+    if (Math.abs(num) < 0.01) {
+        return num.toFixed(4); // Для очень маленьких чисел
+    } else if (Math.abs(num) < 1) {
+        return num.toFixed(3); // Для маленьких чисел
+    } else if (Math.abs(num) < 10) {
+        return num.toFixed(2); // Для чисел от 1 до 10
+    } else if (Math.abs(num) < 100) {
+        return num.toFixed(1); // Для чисел от 10 до 100
+    } else {
+        return Math.round(num).toString(); // Для больших чисел
+    }
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    // Инициализируем графики
+    initializeCharts();
+    
+    // Показываем отладочную информацию при нажатии Alt+D
+    document.addEventListener('keydown', function(e) {
+        if (e.altKey && e.key === 'd') {
+            const debugCard = document.getElementById('debug-card');
+            debugCard.classList.toggle('d-none');
+        }
+    });
+    
+    // Устанавливаем WebSocket соединение
+    connectWebSocket();
+});
+
+// Закрываем соединение при уходе со страницы
+window.addEventListener('beforeunload', function() {
+    if (ws) {
+        ws.close();
+    }
+});
+</script>
+{% endblock %}
+
+{% block scripts %}
+<!-- Дополнительные скрипты -->
+{% endblock %} 

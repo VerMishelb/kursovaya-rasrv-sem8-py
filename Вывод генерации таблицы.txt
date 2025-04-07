@@ -1,0 +1,423 @@
+E:\VSProjects\MaksimKursach\.venv\Scripts\python.exe E:\VSProjects\MaksimKursach\database\init_db.py 
+2025-04-06 00:28:02,098 INFO sqlalchemy.engine.Engine select pg_catalog.version()
+2025-04-06 00:28:02,098 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-04-06 00:28:02,103 INFO sqlalchemy.engine.Engine select current_schema()
+2025-04-06 00:28:02,103 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-04-06 00:28:02,107 INFO sqlalchemy.engine.Engine show standard_conforming_strings
+2025-04-06 00:28:02,107 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-04-06 00:28:02,109 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-04-06 00:28:02,112 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,112 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ('roles', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,098 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-04-06 00:28:02,098 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-04-06 00:28:02,103 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-04-06 00:28:02,103 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-04-06 00:28:02,107 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-04-06 00:28:02,107 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-04-06 00:28:02,109 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-04-06 00:28:02,112 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,112 - sqlalchemy.engine.Engine - INFO - [generated in 0.00016s] ('roles', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,120 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,120 - sqlalchemy.engine.Engine - INFO - [cached since 0.007861s ago] ('users', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,121 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,121 - sqlalchemy.engine.Engine - INFO - [cached since 0.008889s ago] ('sensors', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,122 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,122 - sqlalchemy.engine.Engine - INFO - [cached since 0.009848s ago] ('current_values', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,123 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,123 - sqlalchemy.engine.Engine - INFO - [cached since 0.01085s ago] ('equipment_settings', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,124 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,124 - sqlalchemy.engine.Engine - INFO - [cached since 0.01181s ago] ('events', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,125 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,125 - sqlalchemy.engine.Engine - INFO - [cached since 0.01277s ago] ('production_line', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,126 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE roles (
+	id BIGSERIAL NOT NULL, 
+	"roleName" VARCHAR NOT NULL, 
+	description VARCHAR, 
+	PRIMARY KEY (id), 
+	UNIQUE ("roleName")
+)
+
+
+2025-04-06 00:28:02,126 - sqlalchemy.engine.Engine - INFO - [no key 0.00008s] ()
+2025-04-06 00:28:02,120 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,120 INFO sqlalchemy.engine.Engine [cached since 0.007861s ago] ('users', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,121 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,121 INFO sqlalchemy.engine.Engine [cached since 0.008889s ago] ('sensors', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,122 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,122 INFO sqlalchemy.engine.Engine [cached since 0.009848s ago] ('current_values', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,123 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,123 INFO sqlalchemy.engine.Engine [cached since 0.01085s ago] ('equipment_settings', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,124 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,124 INFO sqlalchemy.engine.Engine [cached since 0.01181s ago] ('events', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,125 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-04-06 00:28:02,125 INFO sqlalchemy.engine.Engine [cached since 0.01277s ago] ('production_line', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-04-06 00:28:02,126 INFO sqlalchemy.engine.Engine 
+CREATE TABLE roles (
+	id BIGSERIAL NOT NULL, 
+	"roleName" VARCHAR NOT NULL, 
+	description VARCHAR, 
+	PRIMARY KEY (id), 
+	UNIQUE ("roleName")
+)
+
+
+2025-04-06 00:28:02,126 INFO sqlalchemy.engine.Engine [no key 0.00008s] ()
+2025-04-06 00:28:02,150 INFO sqlalchemy.engine.Engine 
+CREATE TABLE sensors (
+	id BIGSERIAL NOT NULL, 
+	sensor_name VARCHAR NOT NULL, 
+	location BIGINT, 
+	active BOOLEAN, 
+	PRIMARY KEY (id)
+)
+
+
+2025-04-06 00:28:02,150 INFO sqlalchemy.engine.Engine [no key 0.00010s] ()
+2025-04-06 00:28:02,156 INFO sqlalchemy.engine.Engine 
+CREATE TABLE production_line (
+	id BIGSERIAL NOT NULL, 
+	name VARCHAR NOT NULL, 
+	PRIMARY KEY (id)
+)
+
+
+2025-04-06 00:28:02,156 INFO sqlalchemy.engine.Engine [no key 0.00009s] ()
+2025-04-06 00:28:02,162 INFO sqlalchemy.engine.Engine 
+CREATE TABLE users (
+	id BIGSERIAL NOT NULL, 
+	name VARCHAR, 
+	login VARCHAR NOT NULL, 
+	password VARCHAR NOT NULL, 
+	role_id INTEGER, 
+	PRIMARY KEY (id), 
+	UNIQUE (login), 
+	FOREIGN KEY(role_id) REFERENCES roles (id)
+)
+
+
+2025-04-06 00:28:02,162 INFO sqlalchemy.engine.Engine [no key 0.00008s] ()
+2025-04-06 00:28:02,150 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE sensors (
+	id BIGSERIAL NOT NULL, 
+	sensor_name VARCHAR NOT NULL, 
+	location BIGINT, 
+	active BOOLEAN, 
+	PRIMARY KEY (id)
+)
+
+
+2025-04-06 00:28:02,150 - sqlalchemy.engine.Engine - INFO - [no key 0.00010s] ()
+2025-04-06 00:28:02,156 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE production_line (
+	id BIGSERIAL NOT NULL, 
+	name VARCHAR NOT NULL, 
+	PRIMARY KEY (id)
+)
+
+
+2025-04-06 00:28:02,156 - sqlalchemy.engine.Engine - INFO - [no key 0.00009s] ()
+2025-04-06 00:28:02,162 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE users (
+	id BIGSERIAL NOT NULL, 
+	name VARCHAR, 
+	login VARCHAR NOT NULL, 
+	password VARCHAR NOT NULL, 
+	role_id INTEGER, 
+	PRIMARY KEY (id), 
+	UNIQUE (login), 
+	FOREIGN KEY(role_id) REFERENCES roles (id)
+)
+
+
+2025-04-06 00:28:02,162 - sqlalchemy.engine.Engine - INFO - [no key 0.00008s] ()
+2025-04-06 00:28:02,172 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE current_values (
+	id BIGSERIAL NOT NULL, 
+	sensors_id BIGINT NOT NULL, 
+	value FLOAT NOT NULL, 
+	time TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(sensors_id) REFERENCES sensors (id)
+)
+
+
+2025-04-06 00:28:02,172 - sqlalchemy.engine.Engine - INFO - [no key 0.00009s] ()
+2025-04-06 00:28:02,176 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE equipment_settings (
+	id BIGSERIAL NOT NULL, 
+	sensor_id BIGINT, 
+	max_value FLOAT, 
+	min_value FLOAT, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(sensor_id) REFERENCES sensors (id)
+)
+
+
+2025-04-06 00:28:02,176 - sqlalchemy.engine.Engine - INFO - [no key 0.00008s] ()
+2025-04-06 00:28:02,180 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE events (
+	id BIGSERIAL NOT NULL, 
+	time TIMESTAMP WITHOUT TIME ZONE, 
+	description VARCHAR, 
+	sensors_id BIGINT, 
+	users_id BIGINT, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(sensors_id) REFERENCES sensors (id), 
+	FOREIGN KEY(users_id) REFERENCES users (id)
+)
+
+
+2025-04-06 00:28:02,180 - sqlalchemy.engine.Engine - INFO - [no key 0.00008s] ()
+2025-04-06 00:28:02,172 INFO sqlalchemy.engine.Engine 
+CREATE TABLE current_values (
+	id BIGSERIAL NOT NULL, 
+	sensors_id BIGINT NOT NULL, 
+	value FLOAT NOT NULL, 
+	time TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(sensors_id) REFERENCES sensors (id)
+)
+
+
+2025-04-06 00:28:02,172 INFO sqlalchemy.engine.Engine [no key 0.00009s] ()
+2025-04-06 00:28:02,176 INFO sqlalchemy.engine.Engine 
+CREATE TABLE equipment_settings (
+	id BIGSERIAL NOT NULL, 
+	sensor_id BIGINT, 
+	max_value FLOAT, 
+	min_value FLOAT, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(sensor_id) REFERENCES sensors (id)
+)
+
+
+2025-04-06 00:28:02,176 INFO sqlalchemy.engine.Engine [no key 0.00008s] ()
+2025-04-06 00:28:02,180 INFO sqlalchemy.engine.Engine 
+CREATE TABLE events (
+	id BIGSERIAL NOT NULL, 
+	time TIMESTAMP WITHOUT TIME ZONE, 
+	description VARCHAR, 
+	sensors_id BIGINT, 
+	users_id BIGINT, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(sensors_id) REFERENCES sensors (id), 
+	FOREIGN KEY(users_id) REFERENCES users (id)
+)
+
+
+2025-04-06 00:28:02,180 INFO sqlalchemy.engine.Engine [no key 0.00008s] ()
+2025-04-06 00:28:02,186 INFO sqlalchemy.engine.Engine COMMIT
+2025-04-06 00:28:02,188 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-04-06 00:28:02,186 - __main__ - INFO - Таблицы успешно созданы.
+2025-04-06 00:28:02,186 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-04-06 00:28:02,188 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-04-06 00:28:02,197 - sqlalchemy.engine.Engine - INFO - SELECT roles.id, roles."roleName", roles.description 
+FROM roles
+2025-04-06 00:28:02,197 - sqlalchemy.engine.Engine - INFO - [generated in 0.00014s] ()
+2025-04-06 00:28:02,202 - sqlalchemy.engine.Engine - INFO - INSERT INTO roles ("roleName", description) SELECT p0::VARCHAR, p1::VARCHAR FROM (VALUES ($1::VARCHAR, $2::VARCHAR, 0), ($3::VARCHAR, $4::VARCHAR, 1)) AS imp_sen(p0, p1, sen_counter) ORDER BY sen_counter RETURNING roles.id, roles.id AS id__1
+2025-04-06 00:28:02,202 - sqlalchemy.engine.Engine - INFO - [generated in 0.00007s (insertmanyvalues) 1/1 (ordered)] ('admin', 'Администратор системы', 'technician', 'Технический специалист')
+2025-04-06 00:28:02,204 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-04-06 00:28:02,205 - __main__ - INFO - Создано ролей: 2
+2025-04-06 00:28:02,206 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-04-06 00:28:02,207 - sqlalchemy.engine.Engine - INFO - SELECT roles.id, roles."roleName", roles.description 
+FROM roles 
+WHERE roles.id = $1::BIGINT
+2025-04-06 00:28:02,207 - sqlalchemy.engine.Engine - INFO - [generated in 0.00011s] (1,)
+2025-04-06 00:28:02,209 - sqlalchemy.engine.Engine - INFO - SELECT roles.id, roles."roleName", roles.description 
+FROM roles 
+WHERE roles.id = $1::BIGINT
+2025-04-06 00:28:02,210 - sqlalchemy.engine.Engine - INFO - [cached since 0.002778s ago] (2,)
+2025-04-06 00:28:02,210 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-04-06 00:28:02,211 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-04-06 00:28:02,213 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.name, users.login, users.password, users.role_id, roles_1.id AS id_1, roles_1."roleName", roles_1.description 
+FROM users LEFT OUTER JOIN roles AS roles_1 ON roles_1.id = users.role_id
+2025-04-06 00:28:02,213 - sqlalchemy.engine.Engine - INFO - [generated in 0.00011s] ()
+2025-04-06 00:28:02,197 INFO sqlalchemy.engine.Engine SELECT roles.id, roles."roleName", roles.description 
+FROM roles
+2025-04-06 00:28:02,197 INFO sqlalchemy.engine.Engine [generated in 0.00014s] ()
+2025-04-06 00:28:02,202 INFO sqlalchemy.engine.Engine INSERT INTO roles ("roleName", description) SELECT p0::VARCHAR, p1::VARCHAR FROM (VALUES ($1::VARCHAR, $2::VARCHAR, 0), ($3::VARCHAR, $4::VARCHAR, 1)) AS imp_sen(p0, p1, sen_counter) ORDER BY sen_counter RETURNING roles.id, roles.id AS id__1
+2025-04-06 00:28:02,202 INFO sqlalchemy.engine.Engine [generated in 0.00007s (insertmanyvalues) 1/1 (ordered)] ('admin', 'Администратор системы', 'technician', 'Технический специалист')
+2025-04-06 00:28:02,204 INFO sqlalchemy.engine.Engine COMMIT
+2025-04-06 00:28:02,206 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-04-06 00:28:02,207 INFO sqlalchemy.engine.Engine SELECT roles.id, roles."roleName", roles.description 
+FROM roles 
+WHERE roles.id = $1::BIGINT
+2025-04-06 00:28:02,207 INFO sqlalchemy.engine.Engine [generated in 0.00011s] (1,)
+2025-04-06 00:28:02,209 INFO sqlalchemy.engine.Engine SELECT roles.id, roles."roleName", roles.description 
+FROM roles 
+WHERE roles.id = $1::BIGINT
+2025-04-06 00:28:02,210 INFO sqlalchemy.engine.Engine [cached since 0.002778s ago] (2,)
+2025-04-06 00:28:02,210 INFO sqlalchemy.engine.Engine ROLLBACK
+2025-04-06 00:28:02,211 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-04-06 00:28:02,213 INFO sqlalchemy.engine.Engine SELECT users.id, users.name, users.login, users.password, users.role_id, roles_1.id AS id_1, roles_1."roleName", roles_1.description 
+FROM users LEFT OUTER JOIN roles AS roles_1 ON roles_1.id = users.role_id
+2025-04-06 00:28:02,213 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2025-04-06 00:28:02,216 INFO sqlalchemy.engine.Engine INSERT INTO users (name, login, password, role_id) SELECT p0::VARCHAR, p1::VARCHAR, p2::VARCHAR, p3::INTEGER FROM (VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::INTEGER, 0), ($5::VARCHAR, $6::VARCHAR, $7::VARCHAR, $8::INTEGER, 1)) AS imp_sen(p0, p1, p2, p3, sen_counter) ORDER BY sen_counter RETURNING users.id, users.id AS id__1
+2025-04-06 00:28:02,216 INFO sqlalchemy.engine.Engine [generated in 0.00010s (insertmanyvalues) 1/1 (ordered)] ('admin', 'admin', '12345', 1, 'operator', 'tech', '12345', 2)
+2025-04-06 00:28:02,218 INFO sqlalchemy.engine.Engine COMMIT
+2025-04-06 00:28:02,220 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-04-06 00:28:02,221 INFO sqlalchemy.engine.Engine SELECT production_line.id, production_line.name 
+FROM production_line 
+WHERE production_line.name = $1::VARCHAR
+2025-04-06 00:28:02,221 INFO sqlalchemy.engine.Engine [generated in 0.00012s] ('Экструдер',)
+2025-04-06 00:28:02,224 INFO sqlalchemy.engine.Engine INSERT INTO production_line (name) VALUES ($1::VARCHAR) RETURNING production_line.id
+2025-04-06 00:28:02,224 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ('Экструдер',)
+2025-04-06 00:28:02,226 INFO sqlalchemy.engine.Engine COMMIT
+2025-04-06 00:28:02,228 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-04-06 00:28:02,228 INFO sqlalchemy.engine.Engine SELECT sensors.id, sensors.sensor_name, sensors.location, sensors.active 
+FROM sensors
+2025-04-06 00:28:02,228 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2025-04-06 00:28:02,231 INFO sqlalchemy.engine.Engine INSERT INTO sensors (sensor_name, location, active) SELECT p0::VARCHAR, p1::BIGINT, p2::BOOLEAN FROM (VALUES ($1::VARCHAR, $2::BIGINT, $3::BOOLEAN, 0), ($4::VARCHAR, $5::BIGINT, $6::BOOLEAN, 1), ($7::VARCHAR, $8::BIGINT, $9::BOOLEAN, 2), ($10::VARCHAR, $11::BIGINT, $12::BOOLEAN, 3)) AS imp_sen(p0, p1, p2, sen_counter) ORDER BY sen_counter RETURNING sensors.id, sensors.id AS id__1
+2025-04-06 00:28:02,231 INFO sqlalchemy.engine.Engine [generated in 0.00007s (insertmanyvalues) 1/1 (ordered)] ('Температура экструдера', 1, True, 'Скорость протяжки', 1, True, 'Толщина изоляции', 1, True, 'Сечение жилы', 1, True)
+2025-04-06 00:28:02,233 INFO sqlalchemy.engine.Engine COMMIT
+2025-04-06 00:28:02,235 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-04-06 00:28:02,235 INFO sqlalchemy.engine.Engine SELECT sensors.id, sensors.sensor_name, sensors.location, sensors.active 
+FROM sensors
+2025-04-06 00:28:02,235 INFO sqlalchemy.engine.Engine [cached since 0.006916s ago] ()
+2025-04-06 00:28:02,237 INFO sqlalchemy.engine.Engine SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,237 INFO sqlalchemy.engine.Engine [generated in 0.00011s] (1,)
+2025-04-06 00:28:02,239 INFO sqlalchemy.engine.Engine SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,239 INFO sqlalchemy.engine.Engine [cached since 0.001954s ago] (2,)
+2025-04-06 00:28:02,240 INFO sqlalchemy.engine.Engine SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,240 INFO sqlalchemy.engine.Engine [cached since 0.00296s ago] (3,)
+2025-04-06 00:28:02,241 INFO sqlalchemy.engine.Engine SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,241 INFO sqlalchemy.engine.Engine [cached since 0.004015s ago] (4,)
+2025-04-06 00:28:02,242 INFO sqlalchemy.engine.Engine INSERT INTO equipment_settings (sensor_id, max_value, min_value) SELECT p0::BIGINT, p1::FLOAT, p2::FLOAT FROM (VALUES ($1::BIGINT, $2::FLOAT, $3::FLOAT, 0), ($4::BIGINT, $5::FLOAT, $6::FLOAT, 1), ($7::BIGINT, $8::FLOAT, $9::FLOAT, 2), ($10::BIGINT, $11::FLOAT, $12::FLOAT, 3)) AS imp_sen(p0, p1, p2, sen_counter) ORDER BY sen_counter RETURNING equipment_settings.id, equipment_settings.id AS id__1
+2025-04-06 00:28:02,243 INFO sqlalchemy.engine.Engine [generated in 0.00006s (insertmanyvalues) 1/1 (ordered)] (1, 180, 160, 2, 40, 30, 3, 2, 1.8, 4, 50.2, 49.8)
+2025-04-06 00:28:02,216 - sqlalchemy.engine.Engine - INFO - INSERT INTO users (name, login, password, role_id) SELECT p0::VARCHAR, p1::VARCHAR, p2::VARCHAR, p3::INTEGER FROM (VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::INTEGER, 0), ($5::VARCHAR, $6::VARCHAR, $7::VARCHAR, $8::INTEGER, 1)) AS imp_sen(p0, p1, p2, p3, sen_counter) ORDER BY sen_counter RETURNING users.id, users.id AS id__1
+2025-04-06 00:28:02,216 - sqlalchemy.engine.Engine - INFO - [generated in 0.00010s (insertmanyvalues) 1/1 (ordered)] ('admin', 'admin', '12345', 1, 'operator', 'tech', '12345', 2)
+2025-04-06 00:28:02,218 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-04-06 00:28:02,220 - __main__ - INFO - Создано пользователей: 2
+2025-04-06 00:28:02,220 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-04-06 00:28:02,221 - sqlalchemy.engine.Engine - INFO - SELECT production_line.id, production_line.name 
+FROM production_line 
+WHERE production_line.name = $1::VARCHAR
+2025-04-06 00:28:02,221 - sqlalchemy.engine.Engine - INFO - [generated in 0.00012s] ('Экструдер',)
+2025-04-06 00:28:02,224 - sqlalchemy.engine.Engine - INFO - INSERT INTO production_line (name) VALUES ($1::VARCHAR) RETURNING production_line.id
+2025-04-06 00:28:02,224 - sqlalchemy.engine.Engine - INFO - [generated in 0.00010s] ('Экструдер',)
+2025-04-06 00:28:02,226 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-04-06 00:28:02,227 - __main__ - INFO - Изменено местоположений: 1
+2025-04-06 00:28:02,228 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-04-06 00:28:02,228 - sqlalchemy.engine.Engine - INFO - SELECT sensors.id, sensors.sensor_name, sensors.location, sensors.active 
+FROM sensors
+2025-04-06 00:28:02,228 - sqlalchemy.engine.Engine - INFO - [generated in 0.00009s] ()
+2025-04-06 00:28:02,231 - sqlalchemy.engine.Engine - INFO - INSERT INTO sensors (sensor_name, location, active) SELECT p0::VARCHAR, p1::BIGINT, p2::BOOLEAN FROM (VALUES ($1::VARCHAR, $2::BIGINT, $3::BOOLEAN, 0), ($4::VARCHAR, $5::BIGINT, $6::BOOLEAN, 1), ($7::VARCHAR, $8::BIGINT, $9::BOOLEAN, 2), ($10::VARCHAR, $11::BIGINT, $12::BOOLEAN, 3)) AS imp_sen(p0, p1, p2, sen_counter) ORDER BY sen_counter RETURNING sensors.id, sensors.id AS id__1
+2025-04-06 00:28:02,231 - sqlalchemy.engine.Engine - INFO - [generated in 0.00007s (insertmanyvalues) 1/1 (ordered)] ('Температура экструдера', 1, True, 'Скорость протяжки', 1, True, 'Толщина изоляции', 1, True, 'Сечение жилы', 1, True)
+2025-04-06 00:28:02,233 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-04-06 00:28:02,234 - __main__ - INFO - Создано датчиков: 4
+2025-04-06 00:28:02,235 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-04-06 00:28:02,235 - sqlalchemy.engine.Engine - INFO - SELECT sensors.id, sensors.sensor_name, sensors.location, sensors.active 
+FROM sensors
+2025-04-06 00:28:02,235 - sqlalchemy.engine.Engine - INFO - [cached since 0.006916s ago] ()
+2025-04-06 00:28:02,237 - sqlalchemy.engine.Engine - INFO - SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,237 - sqlalchemy.engine.Engine - INFO - [generated in 0.00011s] (1,)
+2025-04-06 00:28:02,239 - sqlalchemy.engine.Engine - INFO - SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,239 - sqlalchemy.engine.Engine - INFO - [cached since 0.001954s ago] (2,)
+2025-04-06 00:28:02,240 - sqlalchemy.engine.Engine - INFO - SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,240 - sqlalchemy.engine.Engine - INFO - [cached since 0.00296s ago] (3,)
+2025-04-06 00:28:02,241 - sqlalchemy.engine.Engine - INFO - SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,241 - sqlalchemy.engine.Engine - INFO - [cached since 0.004015s ago] (4,)
+2025-04-06 00:28:02,242 - sqlalchemy.engine.Engine - INFO - INSERT INTO equipment_settings (sensor_id, max_value, min_value) SELECT p0::BIGINT, p1::FLOAT, p2::FLOAT FROM (VALUES ($1::BIGINT, $2::FLOAT, $3::FLOAT, 0), ($4::BIGINT, $5::FLOAT, $6::FLOAT, 1), ($7::BIGINT, $8::FLOAT, $9::FLOAT, 2), ($10::BIGINT, $11::FLOAT, $12::FLOAT, 3)) AS imp_sen(p0, p1, p2, sen_counter) ORDER BY sen_counter RETURNING equipment_settings.id, equipment_settings.id AS id__1
+2025-04-06 00:28:02,243 - sqlalchemy.engine.Engine - INFO - [generated in 0.00006s (insertmanyvalues) 1/1 (ordered)] (1, 180, 160, 2, 40, 30, 3, 2, 1.8, 4, 50.2, 49.8)
+2025-04-06 00:28:02,244 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-04-06 00:28:02,246 - __main__ - INFO - Создано настроек оборудования: 4
+2025-04-06 00:28:02,247 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-04-06 00:28:02,247 - sqlalchemy.engine.Engine - INFO - SELECT sensors.id, sensors.sensor_name, sensors.location, sensors.active 
+FROM sensors JOIN equipment_settings ON sensors.id = equipment_settings.sensor_id
+2025-04-06 00:28:02,247 - sqlalchemy.engine.Engine - INFO - [generated in 0.00013s] ()
+2025-04-06 00:28:02,250 - sqlalchemy.engine.Engine - INFO - SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,250 - sqlalchemy.engine.Engine - INFO - [cached since 0.01295s ago] (1,)
+2025-04-06 00:28:02,251 - sqlalchemy.engine.Engine - INFO - SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,251 - sqlalchemy.engine.Engine - INFO - [cached since 0.01402s ago] (2,)
+2025-04-06 00:28:02,252 - sqlalchemy.engine.Engine - INFO - SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,252 - sqlalchemy.engine.Engine - INFO - [cached since 0.01505s ago] (3,)
+2025-04-06 00:28:02,253 - sqlalchemy.engine.Engine - INFO - SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,253 - sqlalchemy.engine.Engine - INFO - [cached since 0.01608s ago] (4,)
+2025-04-06 00:28:02,255 - sqlalchemy.engine.Engine - INFO - INSERT INTO current_values (sensors_id, value, time) SELECT p0::BIGINT, p1::FLOAT, p2::TIMESTAMP WITHOUT TIME ZONE FROM (VALUES ($1::BIGINT, $2::FLOAT, $3::TIMESTAMP WITHOUT TIME ZONE, 0), ($4::BIGINT, $5::FLOAT, $6::TIMESTAMP WITHOUT TIME ZONE, 1), ($7::BIGINT, $8::FLOAT, $9::TIMESTAMP WITHOUT TIME ZONE, 2), ($10::BIGINT, $11::FLOAT, $12::TIMESTAMP WITHOUT TIME ZONE, 3)) AS imp_sen(p0, p1, p2, sen_counter) ORDER BY sen_counter RETURNING current_values.id, current_values.id AS id__1
+2025-04-06 00:28:02,255 - sqlalchemy.engine.Engine - INFO - [generated in 0.00007s (insertmanyvalues) 1/1 (ordered)] (1, 171.39707141687265, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), 2, 36.69763156104889, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), 3, 1.984697484018334, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), 4, 49.981750420175196, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239))
+2025-04-06 00:28:02,257 - sqlalchemy.engine.Engine - INFO - INSERT INTO events (time, description, sensors_id, users_id) SELECT p0::TIMESTAMP WITHOUT TIME ZONE, p1::VARCHAR, p2::BIGINT, p3::BIGINT FROM (VALUES ($1::TIMESTAMP WITHOUT TIME ZONE, $2::VARCHAR, $3::BIGINT, $4::BIGINT, 0), ($5::TIMESTAMP WITHOUT TI ... 207 characters truncated ... AS imp_sen(p0, p1, p2, p3, sen_counter) ORDER BY sen_counter RETURNING events.id, events.id AS id__1
+2025-04-06 00:28:02,257 - sqlalchemy.engine.Engine - INFO - [generated in 0.00006s (insertmanyvalues) 1/1 (ordered)] (datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), "Измереное значение датчика 'Температура экструдера': 171.4 °C", 1, 1, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), "Измереное значение датчика 'Скорость протяжки': 36.7 м/мин", 2, 1, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), "Измереное значение датчика 'Толщина изоляции': 1.98 мм", 3, 1, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), "Измереное значение датчика 'Сечение жилы': 49.98 мм²", 4, 1)
+2025-04-06 00:28:02,244 INFO sqlalchemy.engine.Engine COMMIT
+2025-04-06 00:28:02,247 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-04-06 00:28:02,247 INFO sqlalchemy.engine.Engine SELECT sensors.id, sensors.sensor_name, sensors.location, sensors.active 
+FROM sensors JOIN equipment_settings ON sensors.id = equipment_settings.sensor_id
+2025-04-06 00:28:02,247 INFO sqlalchemy.engine.Engine [generated in 0.00013s] ()
+2025-04-06 00:28:02,250 INFO sqlalchemy.engine.Engine SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,250 INFO sqlalchemy.engine.Engine [cached since 0.01295s ago] (1,)
+2025-04-06 00:28:02,251 INFO sqlalchemy.engine.Engine SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,251 INFO sqlalchemy.engine.Engine [cached since 0.01402s ago] (2,)
+2025-04-06 00:28:02,252 INFO sqlalchemy.engine.Engine SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,252 INFO sqlalchemy.engine.Engine [cached since 0.01505s ago] (3,)
+2025-04-06 00:28:02,253 INFO sqlalchemy.engine.Engine SELECT equipment_settings.id, equipment_settings.sensor_id, equipment_settings.max_value, equipment_settings.min_value 
+FROM equipment_settings 
+WHERE equipment_settings.sensor_id = $1::BIGINT
+2025-04-06 00:28:02,253 INFO sqlalchemy.engine.Engine [cached since 0.01608s ago] (4,)
+2025-04-06 00:28:02,255 INFO sqlalchemy.engine.Engine INSERT INTO current_values (sensors_id, value, time) SELECT p0::BIGINT, p1::FLOAT, p2::TIMESTAMP WITHOUT TIME ZONE FROM (VALUES ($1::BIGINT, $2::FLOAT, $3::TIMESTAMP WITHOUT TIME ZONE, 0), ($4::BIGINT, $5::FLOAT, $6::TIMESTAMP WITHOUT TIME ZONE, 1), ($7::BIGINT, $8::FLOAT, $9::TIMESTAMP WITHOUT TIME ZONE, 2), ($10::BIGINT, $11::FLOAT, $12::TIMESTAMP WITHOUT TIME ZONE, 3)) AS imp_sen(p0, p1, p2, sen_counter) ORDER BY sen_counter RETURNING current_values.id, current_values.id AS id__1
+2025-04-06 00:28:02,255 INFO sqlalchemy.engine.Engine [generated in 0.00007s (insertmanyvalues) 1/1 (ordered)] (1, 171.39707141687265, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), 2, 36.69763156104889, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), 3, 1.984697484018334, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), 4, 49.981750420175196, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239))
+2025-04-06 00:28:02,257 INFO sqlalchemy.engine.Engine INSERT INTO events (time, description, sensors_id, users_id) SELECT p0::TIMESTAMP WITHOUT TIME ZONE, p1::VARCHAR, p2::BIGINT, p3::BIGINT FROM (VALUES ($1::TIMESTAMP WITHOUT TIME ZONE, $2::VARCHAR, $3::BIGINT, $4::BIGINT, 0), ($5::TIMESTAMP WITHOUT TI ... 207 characters truncated ... AS imp_sen(p0, p1, p2, p3, sen_counter) ORDER BY sen_counter RETURNING events.id, events.id AS id__1
+2025-04-06 00:28:02,257 INFO sqlalchemy.engine.Engine [generated in 0.00006s (insertmanyvalues) 1/1 (ordered)] (datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), "Измереное значение датчика 'Температура экструдера': 171.4 °C", 1, 1, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), "Измереное значение датчика 'Скорость протяжки': 36.7 м/мин", 2, 1, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), "Измереное значение датчика 'Толщина изоляции': 1.98 мм", 3, 1, datetime.datetime(2025, 4, 6, 0, 28, 2, 254239), "Измереное значение датчика 'Сечение жилы': 49.98 мм²", 4, 1)
+2025-04-06 00:28:02,260 INFO sqlalchemy.engine.Engine COMMIT
+2025-04-06 00:28:02,260 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-04-06 00:28:02,261 - __main__ - INFO - Созданы показания для 4 датчиков.
+2025-04-06 00:28:02,261 - __main__ - INFO - БД инициализована.
+
+Process finished with exit code 0

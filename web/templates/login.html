@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Вход в систему
+            </div>
+            <div class="card-body">
+                <div id="loginError" class="alert alert-danger d-none" role="alert">
+                    Неверный логин или пароль
+                </div>
+                <form id="loginForm" method="post" action="/login">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Логин</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <button type="submit" class="btn btn-primary">Войти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    try {
+        const response = await fetch('/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+        });
+        
+        if (!response.ok) {
+            throw new Error('Ошибка авторизации');
+        }
+        
+        const data = await response.json();
+        
+        // Устанавливаем cookie с токеном
+        document.cookie = `access_token=${data.access_token}; path=/; max-age=86400`;
+        
+        // Перенаправляем на страницу дашборда
+        window.location.href = '/dashboard';
+    } catch (error) {
+        document.getElementById('loginError').classList.remove('d-none');
+    }
+});
+</script>
+{% endblock %} 

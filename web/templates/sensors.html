@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Мониторинг датчиков</h1>
+        <p>Текущие показания всех датчиков в системе.</p>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" class="form-control" id="sensor-search" placeholder="Поиск датчиков...">
+            <button class="btn btn-outline-secondary" type="button" id="clear-search">✕</button>
+        </div>
+    </div>
+    <div class="col-md-6 text-md-end mt-2 mt-md-0">
+        <span class="me-3">Обновлено: <span id="last-update-time">--:--:--</span></span>
+        <button class="btn btn-primary" id="refresh-button">
+            <i class="bi bi-arrow-clockwise"></i> Обновить
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover" id="sensors-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Название датчика</th>
+                        <th>Расположение</th>
+                        <th>Значение</th>
+                        <th>Мин. значение</th>
+                        <th>Макс. значение</th>
+                        <th>Статус</th>
+                        <th>Обновлено</th>
+                    </tr>
+                </thead>
+                <tbody id="sensors-list">
+                    <tr>
+                        <td colspan="8" class="text-center">Загрузка данных...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+// Функция для загрузки данных датчиков
+async function loadSensorsData() {
+    try {
+        // Не используем токен из cookie, так как это может вызвать проблемы
+        // Запрос автоматически отправит cookie, если они установлены
+        const response = await fetch('/api/sensors/latest');
+        
+        if (!response.ok) {
+            throw new Error(`Ошибка загрузки данных: ${response.status} ${response.statusText}`);
+        }
+        
+        const sensors = await response.json();
+        
+        // Обновляем время последнего обновления
+        document.getElementById('last-update-time').textContent = new Date().toLocaleTimeString();
+        
+        // Отображаем датчики
+        const searchText = document.getElementById('sensor-search').value.toLowerCase();
+        const filteredSensors = searchText ? 
+            sensors.filter(sensor => 
+                sensor.sensor_name.toLowerCase().includes(searchText) || 
+                sensor.location.toLowerCase().includes(searchText)
+            ) : sensors;
+        
+        if (filteredSensors.length > 0) {
+            const tableRows = filteredSensors.map(sensor => {
+                // Проверяем на null и undefined перед использованием toFixed
+                const valueDisplay = isNaN(sensor.value) ? sensor.value : Number(sensor.value).toFixed(2);
+                const minDisplay = sensor.min_value !== null && sensor.min_value !== undefined ? Number(sensor.min_value).toFixed(2) : '-';
+                const maxDisplay = sensor.max_value !== null && sensor.max_value !== undefined ? Number(sensor.max_value).toFixed(2) : '-';
+                
+                return `
+                <tr class="${sensor.status === 'alert' ? 'table-danger' : ''}">
+                    <td>${sensor.sensor_id}</td>
+                    <td>${sensor.sensor_name}</td>
+                    <td>${sensor.location}</td>
+                    <td class="fw-bold">${valueDisplay}</td>
+                    <td>${minDisplay}</td>
+                    <td>${maxDisplay}</td>
+                    <td>
+                        <span class="badge ${sensor.status === 'normal' ? 'bg-success' : 'bg-danger'}">
+                            ${sensor.status === 'normal' ? 'Норма' : 'Внимание'}
+                        </span>
+                    </td>
+                    <td>${new Date(sensor.time).toLocaleString()}</td>
+                </tr>
+                `;
+            }).join('');
+            
+            document.getElementById('sensors-list').innerHTML = tableRows;
+        } else {
+            document.getElementById('sensors-list').innerHTML = `
+                <tr>
+                    <td colspan="8" class="text-center">Нет данных о датчиках</td>
+                </tr>
+            `;
+        }
+        
+    } catch (error) {
+        console.error('Ошибка:', error);
+        document.getElementById('sensors-list').innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center text-danger">Ошибка загрузки данных: ${error.message}</td>
+            </tr>
+        `;
+    }
+}
+
+// Загружаем данные сразу и затем каждые 30 секунд
+loadSensorsData();
+const intervalId = setInterval(loadSensorsData, 30000);
+
+// Обработчик для кнопки обновления
+document.getElementById('refresh-button').addEventListener('click', loadSensorsData);
+
+// Обработчик для поиска
+document.getElementById('sensor-search').addEventListener('input', loadSensorsData);
+
+// Обработчик для очистки поиска
+document.getElementById('clear-search').addEventListener('click', function() {
+    document.getElementById('sensor-search').value = '';
+    loadSensorsData();
+});
+</script>
+{% endblock %} 

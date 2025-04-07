@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1>Тестирование WebSocket</h1>
+        <p>Эта страница предназначена для проверки работы WebSocket соединения.</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <span>Статус соединения</span>
+                <div id="connection-status">
+                    <span class="badge bg-secondary">Не подключено</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <button id="connect-btn" class="btn btn-success">Подключиться</button>
+                    <button id="disconnect-btn" class="btn btn-danger" disabled>Отключиться</button>
+                </div>
+                
+                <div id="messages" class="border rounded p-3 bg-light" style="height: 300px; overflow-y: auto;">
+                    <div class="text-center text-muted">Сообщения будут отображаться здесь</div>
+                </div>
+                
+                <div class="mt-3">
+                    <div class="input-group">
+                        <input type="text" id="message-input" class="form-control" placeholder="Введите сообщение...">
+                        <button id="send-btn" class="btn btn-primary" disabled>Отправить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let ws = null;
+
+// Функция для добавления сообщения в список
+function addMessage(message, type = 'received') {
+    const messagesDiv = document.getElementById('messages');
+    const messageElement = document.createElement('div');
+    messageElement.className = 'mb-2 p-2 rounded ' + 
+        (type === 'received' ? 'bg-info bg-opacity-25 text-start' : 'bg-primary bg-opacity-25 text-end');
+    
+    const time = new Date().toLocaleTimeString();
+    if (typeof message === 'object') {
+        messageElement.innerHTML = `<small class="text-muted">${time}</small><br><pre class="mb-0">${JSON.stringify(message, null, 2)}</pre>`;
+    } else {
+        messageElement.innerHTML = `<small class="text-muted">${time}</small><br>${message}`;
+    }
+    
+    messagesDiv.appendChild(messageElement);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Функция для подключения к WebSocket
+function connectWebSocket() {
+    if (ws) {
+        ws.close();
+    }
+    
+    ws = new WebSocket(`ws://${window.location.host}/ws/test`);
+    
+    document.getElementById('connection-status').innerHTML = 
+        '<span class="badge bg-warning">Подключение...</span>';
+    
+    ws.onopen = function() {
+        document.getElementById('connection-status').innerHTML = 
+            '<span class="badge bg-success">Подключено</span>';
+        
+        document.getElementById('connect-btn').disabled = true;
+        document.getElementById('disconnect-btn').disabled = false;
+        document.getElementById('send-btn').disabled = false;
+        
+        addMessage('Соединение установлено', 'system');
+    };
+    
+    ws.onmessage = function(event) {
+        try {
+            const data = JSON.parse(event.data);
+            addMessage(data, 'received');
+        } catch (e) {
+            addMessage(event.data, 'received');
+        }
+    };
+    
+    ws.onerror = function(error) {
+        document.getElementById('connection-status').innerHTML = 
+            '<span class="badge bg-danger">Ошибка</span>';
+        
+        addMessage(`Ошибка: ${error}`, 'system');
+    };
+    
+    ws.onclose = function() {
+        document.getElementById('connection-status').innerHTML = 
+            '<span class="badge bg-secondary">Отключено</span>';
+        
+        document.getElementById('connect-btn').disabled = false;
+        document.getElementById('disconnect-btn').disabled = true;
+        document.getElementById('send-btn').disabled = true;
+        
+        addMessage('Соединение закрыто', 'system');
+        ws = null;
+    };
+}
+
+// Обработчики кнопок
+document.getElementById('connect-btn').addEventListener('click', connectWebSocket);
+
+document.getElementById('disconnect-btn').addEventListener('click', function() {
+    if (ws) {
+        ws.close();
+    }
+});
+
+document.getElementById('send-btn').addEventListener('click', function() {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        const messageInput = document.getElementById('message-input');
+        const message = messageInput.value.trim();
+        
+        if (message) {
+            ws.send(message);
+            addMessage(message, 'sent');
+            messageInput.value = '';
+        }
+    }
+});
+
+document.getElementById('message-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !document.getElementById('send-btn').disabled) {
+        document.getElementById('send-btn').click();
+    }
+});
+</script>
+{% endblock %} 

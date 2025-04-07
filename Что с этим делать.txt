@@ -1,0 +1,6 @@
+docker-compose up в корне (нужен докер)
+Запустить database/init_db.py для инициализации БД
+Запустить simulator.py
+В докере отключить app, запустить main вместо него.
+localhost:8000\login
+Пароли и пользователи есть в init_db.py

@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Оповещения системы</h1>
+        <p>История оповещений о критических ситуациях.</p>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="input-group">
+            <select class="form-select" id="filter-type">
+                <option value="">Все типы</option>
+                <option value="high_value">Высокое значение</option>
+                <option value="low_value">Низкое значение</option>
+                <option value="value_exceeded">Превышение значения</option>
+            </select>
+            <button class="btn btn-outline-secondary" id="date-filter">
+                <i class="bi bi-calendar"></i> По дате
+            </button>
+        </div>
+    </div>
+    <div class="col-md-6 text-md-end mt-2 mt-md-0">
+        <span class="me-3">Обновлено: <span id="last-update-time">--:--:--</span></span>
+        <button class="btn btn-primary" id="refresh-button">
+            <i class="bi bi-arrow-clockwise"></i> Обновить
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover" id="alerts-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Время</th>
+                        <th>Тип</th>
+                        <th>Описание</th>
+                        <th>Датчик</th>
+                    </tr>
+                </thead>
+                <tbody id="alerts-list">
+                    <tr>
+                        <td colspan="5" class="text-center">Загрузка данных...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="pagination" class="d-flex justify-content-center mt-3">
+            <!-- Пагинация будет добавлена динамически -->
+        </div>
+    </div>
+</div>
+
+<script>
+let currentPage = 1;
+const itemsPerPage = 10;
+let alertsData = [];
+let AUTH_TOKEN = "{{ token }}";
+
+// Функция для загрузки данных оповещений
+async function loadAlertsData() {
+    try {
+        document.getElementById('alerts-list').innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center">Загрузка данных...</td>
+            </tr>
+        `;
+        
+        // Получаем выбранный тип фильтра
+        const filterType = document.getElementById('filter-type').value;
+        
+        // Строим URL с параметрами
+        let url = '/api/alerts';
+        if (filterType) {
+            url += `?event_type=${filterType}`;
+        }
+        
+        console.log('Отправка запроса к:', url);
+        
+        // Отправляем запрос без заголовка авторизации
+        // Сервер должен использовать cookie которая уже отправляется браузером автоматически
+        const response = await fetch(url, {
+            credentials: 'include' // Важно: включаем отправку cookies
+        });
+        
+        console.log('Статус ответа:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`Ошибка загрузки данных: ${response.status} ${response.statusText}`);
+        }
+        
+        alertsData = await response.json();
+        console.log('Получены данные:', alertsData);
+        
+        // Обновляем время последнего обновления
+        document.getElementById('last-update-time').textContent = new Date().toLocaleTimeString();
+        
+        // Отображаем оповещения с пагинацией
+        displayAlerts();
+        
+    } catch (error) {
+        console.error('Ошибка:', error);
+        document.getElementById('alerts-list').innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center text-danger">Ошибка загрузки данных: ${error.message}</td>
+            </tr>
+        `;
+    }
+}
+
+// Функция для отображения оповещений с учетом пагинации
+function displayAlerts() {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedAlerts = alertsData.slice(startIndex, endIndex);
+    
+    if (paginatedAlerts.length > 0) {
+        const tableRows = paginatedAlerts.map(alert => {
+            // Проверяем наличие необходимых полей
+            const id = alert.id || 'Н/Д';
+            const time = alert.time ? new Date(alert.time).toLocaleString() : 'Н/Д';
+            const event_type = alert.event_type || 'unknown';
+            const description = alert.description || alert.message || 'Нет описания';
+            const sensor_name = alert.sensor_name || 'Неизвестно';
+            
+            return `
+                <tr>
+                    <td>${id}</td>
+                    <td>${time}</td>
+                    <td>
+                        <span class="badge ${getAlertBadgeClass(event_type)}">
+                            ${formatAlertType(event_type)}
+                        </span>
+                    </td>
+                    <td>${description}</td>
+                    <td>${sensor_name}</td>
+                </tr>
+            `;
+        }).join('');
+        
+        document.getElementById('alerts-list').innerHTML = tableRows;
+    } else {
+        document.getElementById('alerts-list').innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center">Нет оповещений</td>
+            </tr>
+        `;
+    }
+    
+    // Создаем пагинацию
+    const totalPages = Math.ceil(alertsData.length / itemsPerPage);
+    createPagination(totalPages);
+}
+
+// Функция для создания пагинации
+function createPagination(totalPages) {
+    if (totalPages <= 1) {
+        document.getElementById('pagination').innerHTML = '';
+        return;
+    }
+    
+    let paginationHTML = '<ul class="pagination">';
+    
+    // Кнопка "Предыдущая"
+    paginationHTML += `
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+            <a class="page-link" href="#" data-page="${currentPage - 1}">Предыдущая</a>
+        </li>
+    `;
+    
+    // Ограничиваем количество отображаемых страниц
+    const maxVisiblePages = 5; // Максимальное количество страниц для отображения
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    // Корректируем startPage если endPage достиг максимума
+    if (endPage === totalPages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    // Первая страница и троеточие, если нужно
+    if (startPage > 1) {
+        paginationHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="1">1</a>
+            </li>
+        `;
+        if (startPage > 2) {
+            paginationHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            `;
+        }
+    }
+    
+    // Страницы с номерами
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="#" data-page="${i}">${i}</a>
+            </li>
+        `;
+    }
+    
+    // Последняя страница и троеточие, если нужно
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            paginationHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            `;
+        }
+        paginationHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a>
+            </li>
+        `;
+    }
+    
+    // Кнопка "Следующая"
+    paginationHTML += `
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+            <a class="page-link" href="#" data-page="${currentPage + 1}">Следующая</a>
+        </li>
+    `;
+    
+    paginationHTML += '</ul>';
+    document.getElementById('pagination').innerHTML = paginationHTML;
+    
+    // Добавляем обработчики для кнопок пагинации
+    document.querySelectorAll('#pagination .page-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = parseInt(this.dataset.page);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                displayAlerts();
+            }
+        });
+    });
+}
+
+// Функция для определения класса бейджа в зависимости от типа оповещения
+function getAlertBadgeClass(type) {
+    switch (type) {
+        case 'high_value':
+            return 'bg-danger';
+        case 'low_value':
+            return 'bg-warning';
+        case 'value_exceeded':
+            return 'bg-danger';
+        default:
+            return 'bg-secondary';
+    }
+}
+
+// Функция для форматирования типа оповещения
+function formatAlertType(type) {
+    switch (type) {
+        case 'high_value':
+            return 'Высокое значение';
+        case 'low_value':
+            return 'Низкое значение';
+        case 'value_exceeded':
+            return 'Превышение значения';
+        default:
+            return type;
+    }
+}
+
+// Загружаем данные сразу и затем каждую минуту
+loadAlertsData();
+const intervalId = setInterval(loadAlertsData, 60000);
+
+// Обработчик для кнопки обновления
+document.getElementById('refresh-button').addEventListener('click', loadAlertsData);
+
+// Обработчик для селекта фильтра типа
+document.getElementById('filter-type').addEventListener('change', function() {
+    currentPage = 1; // Сбрасываем на первую страницу при изменении фильтра
+    loadAlertsData();
+});
+</script>
+{% endblock %} 

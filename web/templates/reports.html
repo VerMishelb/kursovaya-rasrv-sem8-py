@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Аналитические отчеты</h1>
+        <p>Сводная информация о производительности за выбранный период.</p>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="input-group">
+            <select class="form-select" id="report-period">
+                <option value="day">За день</option>
+                <option value="week" selected>За неделю</option>
+                <option value="month">За месяц</option>
+            </select>
+            <input type="date" class="form-control" id="date-end" value="">
+        </div>
+    </div>
+    <div class="col-md-6 text-md-end mt-2 mt-md-0">
+        <button class="btn btn-primary" id="generate-report">
+            <i class="bi bi-bar-chart"></i> Сформировать отчет
+        </button>
+        <button class="btn btn-outline-secondary" id="export-report">
+            <i class="bi bi-download"></i> Экспорт
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                Производительность по дням
+            </div>
+            <div class="card-body">
+                <canvas id="production-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                Процент брака
+            </div>
+            <div class="card-body">
+                <canvas id="defect-chart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                Сводные показатели
+            </div>
+            <div class="card-body">
+                <div class="row" id="summary-metrics">
+                    <p>Загрузка данных...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Подключаем Chart.js для графиков -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Устанавливаем текущую дату в поле ввода
+document.getElementById('date-end').valueAsDate = new Date();
+
+// Графики
+let productionChart = null;
+let defectChart = null;
+
+async function generateReport() {
+    try {
+        const token = document.cookie.split('; ').find(row => row.startsWith('access_token='))?.split('=')[1];
+        if (!token) {
+            console.error('Токен не найден');
+            return;
+        }
+        
+        // Получаем параметры периода
+        const periodType = document.getElementById('report-period').value;
+        const endDate = document.getElementById('date-end').value;
+        
+        // Рассчитываем начальную дату периода
+        let startDate;
+        const end = new Date(endDate);
+        
+        switch (periodType) {
+            case 'day':
+                startDate = new Date(end);
+                startDate.setHours(0, 0, 0, 0);
+                end.setHours(23, 59, 59, 999);
+                break;
+            case 'week':
+                startDate = new Date(end);
+                startDate.setDate(end.getDate() - 7);
+                break;
+            case 'month':
+                startDate = new Date(end);
+                startDate.setMonth(end.getMonth() - 1);
+                break;
+            default:
+                startDate = new Date(end);
+                startDate.setDate(end.getDate() - 7);
+        }
+        
+        // Формируем URL с параметрами
+        const url = `/api/statistics/production?from_time=${startDate.toISOString()}&to_time=${end.toISOString()}`;
+        
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Ошибка загрузки данных');
+        }
+        
+        const data = await response.json();
+        
+        // Обновляем графики
+        updateProductionChart(data.bottle_production);
+        updateDefectChart(data.defect_rates);
+        
+        // Обновляем сводные показатели
+        updateSummaryMetrics(data);
+        
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Не удалось сформировать отчет. Пожалуйста, попробуйте позже.');
+    }
+}
+
+// Функция для обновления графика производительности
+function updateProductionChart(productionData) {
+    // Сортируем данные по дате
+    productionData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    // Подготавливаем данные для графика
+    const labels = productionData.map(item => {
+        const date = new Date(item.date);
+        return date.toLocaleDateString();
+    });
+    
+    const values = productionData.map(item => item.bottles);
+    
+    // Создаем или обновляем график
+    const ctx = document.getElementById('production-chart').getContext('2d');
+    
+    if (productionChart) {
+        productionChart.data.labels = labels;
+        productionChart.data.datasets[0].data = values;
+        productionChart.update();
+    } else {
+        productionChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Произведено бутылок',
+                    data: values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Количество бутылок'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Дата'
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Функция для обновления графика процента брака
+function updateDefectChart(defectData) {
+    // Сортируем данные по дате
+    defectData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    // Подготавливаем данные для графика
+    const labels = defectData.map(item => {
+        const date = new Date(item.date);
+        return date.toLocaleDateString();
+    });
+    
+    const values = defectData.map(item => item.rate);
+    
+    // Создаем или обновляем график
+    const ctx = document.getElementById('defect-chart').getContext('2d');
+    
+    if (defectChart) {
+        defectChart.data.labels = labels;
+        defectChart.data.datasets[0].data = values;
+        defectChart.update();
+    } else {
+        defectChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Процент брака',
+                    data: values,
+                    backgroundColor: 'rgba(255, 193, 7, 0.5)',
+                    borderColor: 'rgba(255, 193, 7, 1)',
+                    borderWidth: 2,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Процент брака (%)'
+                        },
+                        suggestedMax: 10
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Дата'
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Функция для обновления сводных показателей
+function updateSummaryMetrics(data) {
+    // Вычисляем суммарные показатели
+    const totalBottles = data.bottle_production.reduce((sum, item) => sum + item.bottles, 0);
+    
+    // Вычисляем средний процент брака
+    const avgDefectRate = data.defect_rates.length > 0 
+        ? data.defect_rates.reduce((sum, item) => sum + item.rate, 0) / data.defect_rates.length 
+        : 0;
+    
+    // Находим максимальную и минимальную производительность
+    const maxProduction = Math.max(...data.bottle_production.map(item => item.bottles));
+    const minProduction = Math.min(...data.bottle_production.map(item => item.bottles));
+    
+    // Находим дату максимальной производительности
+    const maxProdDay = data.bottle_production.find(item => item.bottles === maxProduction);
+    const maxProdDate = maxProdDay ? new Date(maxProdDay.date).toLocaleDateString() : '-';
+    
+    // Рассчитываем среднюю производительность в день
+    const avgProduction = data.bottle_production.length > 0 
+        ? totalBottles / data.bottle_production.length 
+        : 0;
+    
+    // Отображаем метрики
+    const metricsHTML = `
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h3 class="card-title">${totalBottles.toLocaleString()}</h3>
+                    <p class="card-text">Всего произведено</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h3 class="card-title">${avgProduction.toLocaleString(undefined, {maximumFractionDigits: 0})}</h3>
+                    <p class="card-text">Средняя производительность в день</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h3 class="card-title">${maxProduction.toLocaleString()}</h3>
+                    <p class="card-text">Максимальная производительность (${maxProdDate})</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h3 class="card-title">${avgDefectRate.toLocaleString(undefined, {maximumFractionDigits: 2})}%</h3>
+                    <p class="card-text">Средний процент брака</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('summary-metrics').innerHTML = metricsHTML;
+}
+
+// Функция для экспорта отчета
+function exportReport() {
+    // Простой способ экспорта - открытие отчета в новом окне для печати
+    const reportWindow = window.open('', '_blank');
+    
+    // Получаем заголовок периода
+    const periodType = document.getElementById('report-period').value;
+    const endDate = new Date(document.getElementById('date-end').value);
+    let periodText = '';
+    
+    switch (periodType) {
+        case 'day':
+            periodText = `за ${endDate.toLocaleDateString()}`;
+            break;
+        case 'week':
+            const startDate = new Date(endDate);
+            startDate.setDate(endDate.getDate() - 7);
+            periodText = `за период ${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
+            break;
+        case 'month':
+            const monthStart = new Date(endDate);
+            monthStart.setMonth(endDate.getMonth() - 1);
+            periodText = `за период ${monthStart.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
+            break;
+    }
+    
+    // Создаем содержимое отчета
+    let reportContent = `
+        <!DOCTYPE html>
+        <html lang="ru">
+        <head>
+            <meta charset="UTF-8">
+            <title>Отчет о производстве ПЭТ бутылок ${periodText}</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                h1, h2 { color: #333; }
+                table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+                .summary { display: flex; justify-content: space-between; margin-bottom: 20px; }
+                .summary-item { text-align: center; padding: 10px; border: 1px solid #ddd; width: 23%; }
+                .summary-value { font-size: 24px; font-weight: bold; }
+                .summary-label { color: #666; }
+                @media print {
+                    button { display: none; }
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Отчет о производстве ПЭТ бутылок ${periodText}</h1>
+            <p>Дата формирования: ${new Date().toLocaleString()}</p>
+            
+            <h2>Сводные показатели</h2>
+            <div class="summary">
+                ${document.getElementById('summary-metrics').innerHTML}
+            </div>
+            
+            <h2>Производительность по дням</h2>
+            <img src="${productionChart.toBase64Image()}" alt="График производительности" style="width: 100%; max-height: 300px;">
+            
+            <h2>Процент брака</h2>
+            <img src="${defectChart.toBase64Image()}" alt="График процента брака" style="width: 100%; max-height: 300px;">
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button onclick="window.print()">Печать отчета</button>
+            </div>
+        </body>
+        </html>
+    `;
+    
+    reportWindow.document.write(reportContent);
+    reportWindow.document.close();
+}
+
+// Обработчик для кнопки генерации отчета
+document.getElementById('generate-report').addEventListener('click', generateReport);
+
+// Обработчик для кнопки экспорта отчета
+document.getElementById('export-report').addEventListener('click', exportReport);
+
+// Генерируем отчет при загрузке страницы
+document.addEventListener('DOMContentLoaded', generateReport);
+</script>
+{% endblock %}
+
