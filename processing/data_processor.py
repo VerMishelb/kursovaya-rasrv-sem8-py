@@ -42,7 +42,6 @@ async def process_data(topic, data):
                         "move_speed": "Скорость протяжки",
                         "isolation_thickness": "Толщина изоляции в экструдере",
                         "cable_core_profile": "Сечение жилы",
-                        "pressure": "Монометр экструдера",
                     }
                     
                     sensor_name = sensor_type_mapping.get(sensor_type)

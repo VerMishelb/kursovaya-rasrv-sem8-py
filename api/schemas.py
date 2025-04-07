@@ -79,7 +79,6 @@ class ExtruderStats(BaseModel):
     move_speed: Dict[str, Any]
     isolation_thickness: Dict[str, Any]
     cable_core_profile: Dict[str, Any]
-    pressure: Dict[str, Any]
 
 
 class LoginRequest(BaseModel):

@@ -22,7 +22,7 @@
                 <div class="card-body p-0">
                     <div class="row g-0">
                         <div class="col-md-3 text-center p-4 border-end" style="background-color: #f8f9fa;">
-                            <div class="d-inline-block p-3 rounded-circle mb-2" id="status-circle" style="background-color: #6c757d; width: 80px; height: 80px;">
+                            <div class="d-inline-block p-3 rounded-circle mb-2" id="status-circle" style="background-color: #9abedd; width: 80px; height: 80px;">
                                 <i class="fas fa-thermometer-half fa-2x text-white mt-2"></i>
                             </div>
                             <h4 class="mb-0" id="system-status">Инициализация</h4>
@@ -75,10 +75,10 @@
                             <button class="nav-link active" id="temperature-tab" data-bs-toggle="tab" data-bs-target="#temperature-chart" type="button" role="tab" aria-controls="temperature-chart" aria-selected="true">Температура</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pressure-tab" data-bs-toggle="tab" data-bs-target="#pressure-chart" type="button" role="tab" aria-controls="pressure-chart" aria-selected="false">Давление</button>
+                            <button class="nav-link" id="move_speed-tab" data-bs-toggle="tab" data-bs-target="#move_speed-chart" type="button" role="tab" aria-controls="move_speed-chart" aria-selected="false">Скорость протяжки</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="water-level-tab" data-bs-toggle="tab" data-bs-target="#water-level-chart" type="button" role="tab" aria-controls="water-level-chart" aria-selected="false">Уровень воды</button>
+                            <button class="nav-link" id="isolation_thicknes-tab" data-bs-toggle="tab" data-bs-target="#isolation_thicknes-chart" type="button" role="tab" aria-controls="isolation_thicknes-chart" aria-selected="false">Толзина изоляции</button>
                         </li>
                     </ul>
                 </div>
@@ -87,11 +87,11 @@
                         <div class="tab-pane fade show active" id="temperature-chart" role="tabpanel" aria-labelledby="temperature-tab">
                             <canvas id="temperatureChart" height="250"></canvas>
                         </div>
-                        <div class="tab-pane fade" id="pressure-chart" role="tabpanel" aria-labelledby="pressure-tab">
-                            <canvas id="pressureChart" height="250"></canvas>
+                        <div class="tab-pane fade" id="move_speed-chart" role="tabpanel" aria-labelledby="move_speed-tab">
+                            <canvas id="move_speedChart" height="250"></canvas>
                         </div>
-                        <div class="tab-pane fade" id="water-level-chart" role="tabpanel" aria-labelledby="water-level-tab">
-                            <canvas id="waterLevelChart" height="250"></canvas>
+                        <div class="tab-pane fade" id="isolation_thicknes-chart" role="tabpanel" aria-labelledby="isolation_thicknes-tab">
+                            <canvas id="isolationThicknessChart" height="250"></canvas>
                     </div>
                 </div>
             </div>
@@ -132,7 +132,7 @@
                         </div>
                         <div class="d-flex justify-content-between mb-3">
                             <span>Среднее давление:</span>
-                            <span class="fw-bold" id="avg-pressure">-</span>
+                            <span class="fw-bold" id="avg-move_speed">-</span>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span>Эффективность:</span>
@@ -249,13 +249,13 @@ function initializeCharts() {
     });
     
     // График давления
-    const pressCtx = document.getElementById('pressureChart').getContext('2d');
-    charts.pressure = new Chart(pressCtx, {
+    const pressCtx = document.getElementById('move_speedChart').getContext('2d');
+    charts.move_speed = new Chart(pressCtx, {
         type: 'line',
         data: {
             labels: [],
             datasets: [{
-                label: 'Давление (МПа)',
+                label: 'Скорость протяжки (м/мин)',
                 data: [],
                 borderColor: 'rgba(13, 110, 253, 1)',
                 backgroundColor: 'rgba(13, 110, 253, 0.1)',
@@ -288,7 +288,7 @@ function initializeCharts() {
                     display: true,
                     title: {
                         display: true,
-                        text: 'Давление (МПа)'
+                        text: 'Скорость протяжки (м/мин)'
                     },
                     beginAtZero: false,
                     suggestedMin: 0.1,
@@ -299,13 +299,13 @@ function initializeCharts() {
     });
     
     // График уровня воды
-    const levelCtx = document.getElementById('waterLevelChart').getContext('2d');
+    const levelCtx = document.getElementById('isolationThicknessChart').getContext('2d');
     charts.waterLevel = new Chart(levelCtx, {
         type: 'line',
         data: {
             labels: [],
             datasets: [{
-                label: 'Уровень воды (%)',
+                label: 'Толщина изоляции (мм)',
                 data: [],
                 borderColor: 'rgba(32, 201, 151, 1)',
                 backgroundColor: 'rgba(32, 201, 151, 0.1)',
@@ -338,7 +338,7 @@ function initializeCharts() {
                     display: true,
                     title: {
                         display: true,
-                        text: 'Уровень воды (%)'
+                        text: 'Толщина изоляции (мм)'
                     },
                     beginAtZero: false,
                     suggestedMin: 60,
@@ -488,7 +488,7 @@ function updateStatusIndicators(status) {
             badgeClass = 'bg-danger';
             break;
         default:
-            bgColor = '#6c757d'; // серый
+            bgColor = '#9abedd'; // серый
             badgeClass = 'bg-secondary';
     }
     
@@ -509,11 +509,9 @@ function updateSensorsDisplay(sensors) {
     for (const sensor of sensors) {
         let type = 'Другое';
         if (sensor.sensor_name.includes('температур')) type = 'Температура';
-        else if (sensor.sensor_name.includes('скорости нагрева')) type = 'Скорость нагрева';
-        else if (sensor.sensor_name.includes('уровн')) type = 'Уровень воды';
-        else if (sensor.sensor_name.includes('Секундомер')) type = 'Время';
-        else if (sensor.sensor_name.includes('Монометр')) type = 'Давление';
-        else if (sensor.sensor_name.includes('давления пара')) type = 'Пар';
+        else if (sensor.sensor_name.includes('скорости протяж')) type = 'Скорость протяжки';
+        else if (sensor.sensor_name.includes('толщ')) type = 'Толщина изоляции';
+        else if (sensor.sensor_name.includes('ечени')) type = 'Сечение жилы';
         
         if (!sensorTypes[type]) sensorTypes[type] = [];
         sensorTypes[type].push(sensor);
@@ -589,8 +587,8 @@ function updateAlerts(alerts) {
 function updateCharts(sensors) {
     // Находим данные для каждого графика
     const tempSensor = sensors.find(s => s.sensor_name.includes('температур'));
-    const pressSensor = sensors.find(s => s.sensor_name.includes('Монометр'));
-    const levelSensor = sensors.find(s => s.sensor_name.includes('уровн'));
+    const speedSensor = sensors.find(s => s.sensor_name.includes('Скорост'));
+    const isolationSensor = sensors.find(s => s.sensor_name.includes('изоля'));
     
     // Получаем текущее время
     const now = new Date();
@@ -618,17 +616,17 @@ function updateCharts(sensors) {
     }
     
     // Обновляем график давления
-    if (charts.pressure) {
+    if (charts.move_speed) {
         const pressData = [];
         for (let i = 0; i < 13; i++) {
             // Базовое значение + случайное отклонение
-            const baseValue = pressSensor ? parseFloat(pressSensor.value) : 0.2;
+            const baseValue = speedSensor ? parseFloat(speedSensor.value) : 0.2;
             pressData.push(baseValue + (Math.random() * 0.05 - 0.025));
         }
         
-        charts.pressure.data.labels = timeLabels;
-        charts.pressure.data.datasets[0].data = pressData;
-        charts.pressure.update();
+        charts.move_speed.data.labels = timeLabels;
+        charts.move_speed.data.datasets[0].data = pressData;
+        charts.move_speed.update();
     }
     
     // Обновляем график уровня воды
@@ -636,7 +634,7 @@ function updateCharts(sensors) {
         const levelData = [];
         for (let i = 0; i < 13; i++) {
             // Базовое значение + случайное отклонение
-            const baseValue = levelSensor ? parseFloat(levelSensor.value) : 66;
+            const baseValue = isolationSensor ? parseFloat(isolationSensor.value) : 66;
             levelData.push(baseValue + (Math.random() * 2 - 1));
         }
         
@@ -650,7 +648,7 @@ function updateCharts(sensors) {
 function updateSterilizationStats() {
     document.getElementById('cycles-count').textContent = Math.floor(Math.random() * 10) + 5;
     document.getElementById('avg-temperature').textContent = (115 + Math.random() * 5).toFixed(1) + ' °C';
-    document.getElementById('avg-pressure').textContent = (0.2 + Math.random() * 0.03).toFixed(2) + ' МПа';
+    document.getElementById('avg-move_speed').textContent = (0.2 + Math.random() * 0.03).toFixed(2) + ' м/мин';
     
     const efficiency = 85 + Math.floor(Math.random() * 15);
     document.getElementById('efficiency-progress').style.width = efficiency + '%';
