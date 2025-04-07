@@ -1,0 +1,2 @@
+https://dev.mysql.com/downloads/mysql/
+https://github.com/dbeaver/dbeaver/releases/download/25.0.1/dbeaver-ce-25.0.1-x86_64-setup.exe

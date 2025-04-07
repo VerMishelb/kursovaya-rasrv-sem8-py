@@ -1,0 +1,34 @@
+<mxfile host="Electron" modified="2025-03-22T07:14:06.614Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.3.7 Chrome/112.0.5615.204 Electron/24.5.0 Safari/537.36" etag="HWgLnGCQbNnx5VaPSRzV" version="21.3.7" type="device">
+  <diagram name="Страница 1" id="6Cekz-iCOci07aiuAecM">
+    <mxGraphModel dx="866" dy="531" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pmjPryYzaGRBus1X-t75-1" value="База данных значений" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/database_server.svg;" vertex="1" parent="1">
+          <mxGeometry x="300" y="340" width="41" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="pmjPryYzaGRBus1X-t75-2" value="База данных логов" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/database_server.svg;" vertex="1" parent="1">
+          <mxGeometry x="480" y="340" width="41" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="pmjPryYzaGRBus1X-t75-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="pmjPryYzaGRBus1X-t75-3" target="pmjPryYzaGRBus1X-t75-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pmjPryYzaGRBus1X-t75-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="pmjPryYzaGRBus1X-t75-3" target="pmjPryYzaGRBus1X-t75-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pmjPryYzaGRBus1X-t75-3" value="Сервер&lt;br&gt;" style="image;html=1;image=img/lib/clip_art/computers/Server_128x128.png" vertex="1" parent="1">
+          <mxGeometry x="360" y="160" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="pmjPryYzaGRBus1X-t75-4" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.client;" vertex="1" parent="1">
+          <mxGeometry x="70" y="170" width="61.58" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="pmjPryYzaGRBus1X-t75-5" value="Датчики" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sensor;" vertex="1" parent="1">
+          <mxGeometry x="700" y="170" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="pmjPryYzaGRBus1X-t75-6" value="TCP/IP&lt;br&gt;чё-то там" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="140" width="70" height="120" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
